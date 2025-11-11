@@ -47,6 +47,18 @@ leaflet
   })
   .addTo(map);
 
+/*--------------------------PLAYER INFORMATION--------------------------*/
+
+const playerMarker = leaflet.marker(CLASSROOM_LATLNG);
+playerMarker.addTo(map);
+
+const position = CLASSROOM_LATLNG;
+let token: number = 0;
+let hasToken: boolean = false;
+
+if (token) console.log("Funny temporary check work around");
+if (position) console.log("Funny temporary check work around");
+
 /*--------------------------TILE GENERATION--------------------------*/
 
 function spawnCache(i: number, j: number) {
@@ -60,6 +72,33 @@ function spawnCache(i: number, j: number) {
   // Add a rectangle to the map to represent the cache
   const rect = leaflet.rectangle(bounds);
   rect.addTo(map);
+
+  rect.bindPopup(() => {
+    const popUp = document.createElement("div");
+    popUp.innerHTML =
+      'Token: <span id="value">${pointValue}</span>.</div>< button id = "poke" > PRESS ME </button>';
+
+    //TODO: RANDOMLY SEED TOKEN TO A SPECIFIC VALUE
+    let tokenValue = Math.floor(luck([i, j, "initialValue"].toString()) * 100);
+
+    popUp.querySelector<HTMLButtonElement>("#poke")!.addEventListener(
+      "click",
+      () => {
+        //TODO: ADD A POSITION CHECKER
+        if (!hasToken) {
+          token = tokenValue;
+          tokenValue = 0;
+          popUp.querySelector<HTMLSpanElement>("#value")!.innerHTML = tokenValue
+            .toString();
+          hasToken = true;
+        } else {
+          //TODO: PROPER CAN'T DO THAT MESSAGE
+          console.log("Sorry- Temporary can't do that message");
+        }
+      },
+    );
+    return popUp;
+  });
 }
 
 for (let i = -NEIGHBORHOOD_SIZE; i < NEIGHBORHOOD_SIZE; i++) {
