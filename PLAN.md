@@ -13,7 +13,7 @@
 [x] Generate cell tiles on the map
 [x] Make tile generation consistent across reloads
 [x] Create a player marker
-[] Make tiles interactable within a limit from the player
+[x] Make tiles interactable within a limit from the player
 [x] Create an inventory system that can only hold a token
 [x] Display for the current token held if the player has one
 [x] Allow player to combine held token with compatible map token
