@@ -16,5 +16,5 @@
 [] Make tiles interactable within a limit from the player
 [x] Create an inventory system that can only hold a token
 [x] Display for the current token held if the player has one
-[] System to display if the current held token can be combined with any nearby tokens
-[] Allow player to combine held token with compatible map token
+[x] Allow player to combine held token with compatible map token
+[x] Allow player to swap held token with a token on the map

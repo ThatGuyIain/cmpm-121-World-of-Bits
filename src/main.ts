@@ -40,6 +40,7 @@ const GAMEPLAY_ZOOM_LEVEL = 19;
 const TILE_DEGREES = 1e-4;
 const CACHE_SPAWN_PROBABILITY = 0.1;
 const SEEDEDNUMBER = 131;
+const WINNUMBER = SEEDEDNUMBER * 32;
 
 /*--------------------------GLOBAL VARIABLES--------------------------*/
 
@@ -51,6 +52,7 @@ const CLASSROOM_LATLNG = Leaflet.latLng(
 let mapDiv: HTMLDivElement;
 let map: Leaflet.Map;
 let inventoryDiv: HTMLDivElement;
+let winDiv: HTMLDivElement | null;
 
 const cellMarkers = new Map<Leaflet.Rectangle, Leaflet.Marker>();
 
@@ -151,12 +153,20 @@ function createRectangle(
   const rect = Leaflet.rectangle(tileBounds, rectOptions);
 
   rect.on("click", function (e) {
-    const temp = inventory;
-    inventory = e.target.options.token;
-    e.target.options.token = temp;
+    if (
+      inventory?.value == e.target.options.token?.value && inventory != null
+    ) {
+      e.target.options.token.value *= 2;
+      inventory = null;
+    } else {
+      const temp = inventory;
+      inventory = e.target.options.token;
+      e.target.options.token = temp;
+    }
 
     updateInventoryDisplay();
     updateCellDisplay(e.target, e.target.options.token);
+    if (inventory != null && inventory.value >= WINNUMBER) win();
   });
 
   rect.addTo(map);
@@ -167,7 +177,6 @@ function createRectangle(
 
 function getRandomTokenValue(seed: string): number {
   const randomValue = luck(seed);
-  console.log(randomValue);
   if (randomValue <= 0.06) return SEEDEDNUMBER;
   if (randomValue <= 0.09) return (SEEDEDNUMBER * 2);
   return (SEEDEDNUMBER * 4);
@@ -210,6 +219,14 @@ function updateCellDisplay(
 
     marker.setIcon(icon);
   }
+}
+
+function win(): void {
+  if (winDiv != null) return;
+  winDiv = document.createElement("div");
+  winDiv.id = "winDiv";
+  winDiv.textContent = "You win!";
+  document.body.append(winDiv);
 }
 
 /*--------------------------MAIN--------------------------*/
